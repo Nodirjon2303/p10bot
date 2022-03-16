@@ -10,12 +10,12 @@ def start(update: Update, context: CallbackContext):
     check = check_user(update.effective_user.id)
     # context.bot.send_media_group(update.effective_user.id, [InputMediaPhoto(photo)for photo in [open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb')]])
     if check:
-        if check_admin(update.effective_user.id):
-            update.message.reply_text("Assalomu alaykum Admin", reply_markup=ReplyKeyboardRemove())
-            update.message.reply_photo(photo=open('images/mainimage.jpg', 'rb'),
-                                       caption="Mahsulot qo'shishni istagan kategoriyangizni tanlang",
-                                       reply_markup=button_admin_main())
-            return 'state_admin'
+        # if check_admin(update.effective_user.id):
+        #     update.message.reply_text("Assalomu alaykum Admin", reply_markup=ReplyKeyboardRemove())
+        #     update.message.reply_photo(photo=open('images/mainimage.jpg', 'rb'),
+        #                                caption="Mahsulot qo'shishni istagan kategoriyangizni tanlang",
+        #                                reply_markup=button_admin_main())
+        #     return 'state_admin'
 
         update.message.reply_text("Assalomu alaykum", reply_markup=ReplyKeyboardRemove())
         update.message.reply_photo(photo=open('images/mainimage.jpg', 'rb'),

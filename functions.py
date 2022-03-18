@@ -5,7 +5,10 @@ from databse import *
 from buttons import *
 from random import randint
 from geopy.geocoders import Nominatim
+import requests
 state_klaviatura = 1
+
+
 def start(update: Update, context: CallbackContext):
     check = check_user(update.effective_user.id)
     # context.bot.send_media_group(update.effective_user.id, [InputMediaPhoto(photo)for photo in [open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb')]])
@@ -72,8 +75,8 @@ def command_callback(update: Update, context: CallbackContext):
         print(data)
         sanoq = 1
         for i in data:
-            xabar+=f"{sanoq}.<b>{i[2]}</b> --- {i[1]}*{i[3]}={i[1]*i[3]}\n"
-            sanoq+=1
+            xabar += f"{sanoq}.<b>{i[2]}</b> --- {i[1]}*{i[3]}={i[1] * i[3]}\n"
+            sanoq += 1
         query.message.reply_html(xabar, reply_markup=InlineKeyboardMarkup(button_main()))
         return 'state_main'
     elif data == 'savatcha':
@@ -83,10 +86,10 @@ def command_callback(update: Update, context: CallbackContext):
         xabar = "<b>Savatcha</b>\n"
         summa = 0
         for i in data:
-            xabar+=f"""{i[2]}
-└ {i[2]} {i[1]} x {i[3]} = {i[1]*i[3]} so'm\n"""
-            summa+=i[1]*i[3]
-        xabar+=f"\n<u>Jami summa</u> : <i>{summa}</i>"
+            xabar += f"""{i[2]}
+└ {i[2]} {i[1]} x {i[3]} = {i[1] * i[3]} so'm\n"""
+            summa += i[1] * i[3]
+        xabar += f"\n<u>Jami summa</u> : <i>{summa}</i>"
         query.message.reply_html(text=xabar, reply_markup=savatcha_button(data))
         return 'state_savatcha'
     else:
@@ -101,6 +104,7 @@ def command_callback(update: Update, context: CallbackContext):
 
         return 'state_product'
 
+
 def command_savatcha(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
@@ -108,27 +112,28 @@ def command_savatcha(update: Update, context: CallbackContext):
         return "state_savatcha"
     elif data == 'confirm':
         query.message.delete()
-        query.message.reply_html("Yaxshi siz manzilingizni yuboring", reply_markup=ReplyKeyboardMarkup(button_location, resize_keyboard=True))
+        query.message.reply_html("Yaxshi siz manzilingizni yuboring",
+                                 reply_markup=ReplyKeyboardMarkup(button_location, resize_keyboard=True))
         return 'state_location'
     elif data == 'again':
         query.message.reply_photo(open('images/mainimage.jpg', 'rb'),
-                                   caption="Yetkazib berish bo'limi Toshkent shaxrida soat 10:00 dan 3:00 gacha ishlaydi.",
-                                   reply_markup=ReplyKeyboardRemove())
+                                  caption="Yetkazib berish bo'limi Toshkent shaxrida soat 10:00 dan 3:00 gacha ishlaydi.",
+                                  reply_markup=ReplyKeyboardRemove())
         query.message.reply_text("Buyurtmani birga joylashtiramizmi? 🤗",
-                                  reply_markup=InlineKeyboardMarkup(button_main()))
+                                 reply_markup=InlineKeyboardMarkup(button_main()))
         return 'state_main'
     else:
         data = data.split('_')
-        if len(data)==2 and data[1].isdigit():
+        if len(data) == 2 and data[1].isdigit():
             savatcha_id = int(data[1])
-            if data[0]=='-':
+            if data[0] == '-':
                 quantity = get_savatcha_quantity(savatcha_id)
 
-                if quantity[0]==1:
+                if quantity[0] == 1:
                     delete_savatcha(savatcha_id)
                 else:
                     minus_savatcha(savatcha_id)
-            elif data[0]=='+':
+            elif data[0] == '+':
                 plus_savatcha(savatcha_id)
             user_data = get_user(update.effective_user.id)
             user_id = user_data[0]
@@ -143,7 +148,8 @@ def command_savatcha(update: Update, context: CallbackContext):
             query.message.edit_text(xabar, reply_markup=savatcha_button(data), parse_mode="HTML")
         return 'state_savatcha'
 
-def command_location(update:Update, context: CallbackContext):
+
+def command_location(update: Update, context: CallbackContext):
     latitude = update.message.location.latitude
     longitude = update.message.location.longitude
 
@@ -151,13 +157,28 @@ def command_location(update:Update, context: CallbackContext):
     location = geolocator.reverse(f"{latitude}, {longitude}")
     update.message.reply_html(f"Sizning manzilingiz:\n{location.address}"
                               f"Buyurtmangiz qabul qilindi", reply_markup=InlineKeyboardMarkup(button_main()))
+    manzil = location.address
     user_data = get_user(update.effective_user.id)
     user_id = user_data[0]
     data = get_savatcha(user_id, 'savatcha')
+    # print(data)
+    xabar = ""
+    sanoq = 1
     for i in data:
         change_savatcha_status(i[0])
-    return 'state_main'
+        xabar += f"{sanoq}.{i[1]} ta {i[2]} = {i[1] * i[3]} so'm \n"
+        sanoq += 1
+    user_data = get_user(update.effective_user.id)
+    phone_number = user_data[3]
 
+    xabar+=f"\ntelefon raqami: {phone_number}\n" \
+           f"Manzili: {manzil}"
+
+
+    requests.post(
+        f'https://api.telegram.org/bot5101714388:AAG4dFf74I7G0fgnEnhhmMgHLjkkgK_e2lU/sendMessage?chat_id=-1001682852673&text={xabar}')
+
+    return 'state_main'
 
 
 def command_callback_product(update: Updater, context: CallbackContext):
@@ -188,7 +209,8 @@ def command_callback_product(update: Updater, context: CallbackContext):
 
     return state_klaviatura
 
-def command_klaviatura(update:Update, context:CallbackContext):
+
+def command_klaviatura(update: Update, context: CallbackContext):
     query = update.callback_query
     data = query.data
     # query.message.delete()
@@ -196,23 +218,24 @@ def command_klaviatura(update:Update, context:CallbackContext):
         if context.user_data['soni'] == '0':
             context.user_data['soni'] = f'{data}'
         else:
-            context.user_data['soni']+=f"{data}"
+            context.user_data['soni'] += f"{data}"
         query.message.edit_reply_markup(reply_markup=product_soni(context.user_data['soni']))
     elif data == 'soni':
         return state_klaviatura
     elif data == 'delete':
-        if context.user_data['soni'] != '0' and len(context.user_data['soni'])==1:
+        if context.user_data['soni'] != '0' and len(context.user_data['soni']) == 1:
             context.user_data['soni'] = '0'
-        elif context.user_data['soni']=='0':
+        elif context.user_data['soni'] == '0':
             return state_klaviatura
-        elif len(context.user_data['soni'])>1:
-            context.user_data['soni']=context.user_data['soni'][:-1]
+        elif len(context.user_data['soni']) > 1:
+            context.user_data['soni'] = context.user_data['soni'][:-1]
         query.message.edit_reply_markup(reply_markup=product_soni(context.user_data['soni']))
     elif data == 'back':
         query.message.delete()
         cat_id = context.user_data['cat_id']
         products = get_products(cat_id)
-        query.message.reply_photo(open("images/lavash.jpg", 'rb'), caption=f"Bo'lim: 🌯{context.user_data['cat_name']} ",
+        query.message.reply_photo(open("images/lavash.jpg", 'rb'),
+                                  caption=f"Bo'lim: 🌯{context.user_data['cat_name']} ",
                                   reply_markup=category_product_button(products))
 
         return 'state_product'
@@ -226,10 +249,9 @@ def command_klaviatura(update:Update, context:CallbackContext):
         else:
             add_savatcha(user_id, product_id, soni, 'savatcha')
             query.message.reply_photo(photo=open('images/mainimage.jpg', 'rb'),
-                                       caption="Sizning zakazingiz muaffaqiyatli qabul qilindi Zakazingizni Savatcha bo'limida ko'rishingiz mumkin",
-                                       reply_markup=InlineKeyboardMarkup(button_main()))
+                                      caption="Sizning zakazingiz muaffaqiyatli qabul qilindi Zakazingizni Savatcha bo'limida ko'rishingiz mumkin",
+                                      reply_markup=InlineKeyboardMarkup(button_main()))
             return 'state_main'
-
 
 
 def command_addcat(update: Updater, context: CallbackContext):
@@ -242,24 +264,28 @@ def command_addcat(update: Updater, context: CallbackContext):
         update.message.reply_html("Siz ko'rsatilgan shaklda yubormadingiz qayta urinib ko'ring")
 
 
-def command_admin_category(update:Update, context:CallbackContext):
-    text=update.message.text
+def command_admin_category(update: Update, context: CallbackContext):
+    text = update.message.text
     if check_category(text):
-        update.message.reply_text(f"Yaxshi endi {text} categoriyasiga qo'shmoqchi bo'lgan mahsulotingizning nomini yuboring", reply_markup=ReplyKeyboardRemove())
+        update.message.reply_text(
+            f"Yaxshi endi {text} categoriyasiga qo'shmoqchi bo'lgan mahsulotingizning nomini yuboring",
+            reply_markup=ReplyKeyboardRemove())
         context.user_data['category_name'] = text
         return 'state_admin_product'
     else:
         update.message.reply_text("Siz kiritgan kategoriya mavjud emas")
         return 'state_admin'
 
-def command_admin_product(update:Update, context:CallbackContext):
+
+def command_admin_product(update: Update, context: CallbackContext):
     product_name = update.message.text
     context.user_data['product_name'] = product_name
     update.message.reply_html(f"{product_name}ning narxini raqamlar bilan kiriting: ")
 
     return 'state_admin_product_price'
 
-def command_admin_price(update:Update, context:CallbackContext):
+
+def command_admin_price(update: Update, context: CallbackContext):
     narxi = update.message.text
     if narxi.isdigit():
         update.message.reply_text("Yaxshi endi mahsulotning rasmini yuboring")
@@ -271,7 +297,7 @@ def command_admin_price(update:Update, context:CallbackContext):
         return 'state_admin_product_price'
 
 
-def command_admin_image(update:Update, context:CallbackContext):
+def command_admin_image(update: Update, context: CallbackContext):
     file_id = update.message.photo[-1].file_id
     context.bot.getFile(file_id).download(f"images/{context.user_data['product_name']}.jpg")
     product_name = context.user_data['product_name']

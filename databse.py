@@ -1,7 +1,6 @@
 import psycopg2
 import datetime
 
-
 def create_table():
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -18,12 +17,14 @@ def create_table():
     id BIGSERIAL  PRIMARY KEY,
     telegram_id integer ,
     full_name VARCHAR (60),
-    phone_number VARCHAR (25)
+    phone_number VARCHAR (25),
+    status VARCHAR (25) DEFAULT 'user'
     )
     """)
 
     conn.commit()
-create_table()
+
+
 def create_table_category():
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -43,7 +44,11 @@ def create_table_category():
     """)
 
     conn.commit()
+
+
 create_table_category()
+
+
 def create_table_products():
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -65,7 +70,11 @@ def create_table_products():
     """)
 
     conn.commit()
+
+
 create_table_products()
+
+
 def create_table_savatcha():
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -88,7 +97,11 @@ def create_table_savatcha():
     """)
 
     conn.commit()
+
+
 create_table_savatcha()
+
+
 def add_savatcha(user_id, product_id, soni, status):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -103,7 +116,7 @@ def add_savatcha(user_id, product_id, soni, status):
     cursor.execute("""
     INSERT INTO savatcha (product_id, user_id, soni, status)
     VALUES (%s, %s, %s, %s)
-    """, (product_id, user_id,soni, status))
+    """, (product_id, user_id, soni, status))
     conn.commit()
 
 
@@ -126,8 +139,6 @@ where name = '{category}'))
     conn.commit()
 
 
-
-
 def add_users(full_name, phone_number, telegram_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -144,6 +155,8 @@ def add_users(full_name, phone_number, telegram_id):
     VALUES (%s, %s, %s)
     """, (full_name, phone_number, telegram_id))
     conn.commit()
+
+
 def get_savatcha(user_id, status):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -163,6 +176,8 @@ def get_savatcha(user_id, status):
         """)
     data = cursor.fetchall()
     return data
+
+
 def minus_savatcha(savatcha_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -181,6 +196,8 @@ def minus_savatcha(savatcha_id):
         
         """)
     conn.commit()
+
+
 def get_savatcha_quantity(savatcha_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -199,6 +216,8 @@ def get_savatcha_quantity(savatcha_id):
         """)
     data = cursor.fetchone()
     return data
+
+
 def delete_savatcha(savatcha_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -215,6 +234,8 @@ def delete_savatcha(savatcha_id):
         where savatcha_id = {savatcha_id} 
         """)
     conn.commit()
+
+
 def change_savatcha_status(savatcha_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -232,6 +253,8 @@ def change_savatcha_status(savatcha_id):
         where savatcha_id = {savatcha_id} 
         """)
     conn.commit()
+
+
 def plus_savatcha(savatcha_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -250,6 +273,8 @@ def plus_savatcha(savatcha_id):
         
         """)
     conn.commit()
+
+
 def add_category(name):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -284,6 +309,8 @@ def get_categories():
         """)
     data = cursor.fetchall()
     return data
+
+
 def get_products(category_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -301,6 +328,8 @@ def get_products(category_id):
         """)
     data = cursor.fetchall()
     return data
+
+
 def get_product(product_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -318,6 +347,7 @@ def get_product(product_id):
         """)
     data = cursor.fetchone()
     return data
+
 
 def check_user(telegram_id):
     conn = psycopg2.connect(
@@ -339,6 +369,8 @@ def check_user(telegram_id):
         return True
     else:
         return False
+
+
 def check_admin(telegram_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -355,10 +387,12 @@ def check_admin(telegram_id):
     WHERE telegram_id ={telegram_id}
     """)
     data = cursor.fetchone()
-    if data[0]=='admin':
+    if data[0] == 'admin':
         return True
     else:
         return False
+
+
 def check_category(name):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -380,6 +414,7 @@ def check_category(name):
     else:
         return False
 
+
 def get_user(telegram_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -398,6 +433,7 @@ def get_user(telegram_id):
     data = cursor.fetchone()
     return data
 
+
 def add_achko(telegram_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -415,6 +451,8 @@ def add_achko(telegram_id):
         where telegram_id = {telegram_id}
         """)
     conn.commit()
+
+
 def get_achko(telegram_id):
     conn = psycopg2.connect(
         host="ec2-34-192-83-52.compute-1.amazonaws.com",
@@ -433,6 +471,3 @@ def get_achko(telegram_id):
     data = cursor.fetchone()
     print(data)
     return data
-
-
-

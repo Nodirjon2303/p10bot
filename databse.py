@@ -1,21 +1,21 @@
 import psycopg2
 import datetime
 
-conn = psycopg2.connect(
-    host="ec2-34-192-83-52.compute-1.amazonaws.com",
-    database="deqtghb1d51pfq",
-    user="pcrkryogpainva",
-    password="5e3ecfe5802ff28526a7a9d946df8ed006dca620b87b37579ba5ccbc792a2bf5",
-    port="5432"
-)
-
-cursor = conn.cursor()
-
-cursor.execute(f"""
-        ALTER table products
-        add column price integer  default 25000
-        """)
-conn.commit()
+# conn = psycopg2.connect(
+#     host="ec2-34-192-83-52.compute-1.amazonaws.com",
+#     database="deqtghb1d51pfq",
+#     user="pcrkryogpainva",
+#     password="5e3ecfe5802ff28526a7a9d946df8ed006dca620b87b37579ba5ccbc792a2bf5",
+#     port="5432"
+# )
+#
+# cursor = conn.cursor()
+#
+# cursor.execute(f"""
+#         ALTER table products
+#         add column price integer  default 25000
+#         """)
+# conn.commit()
 
 
 

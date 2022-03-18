@@ -196,6 +196,26 @@ def minus_savatcha(savatcha_id):
         
         """)
     conn.commit()
+def update_user_admin(telegram_id):
+    conn = psycopg2.connect(
+        host="ec2-34-192-83-52.compute-1.amazonaws.com",
+        database="deqtghb1d51pfq",
+        user="pcrkryogpainva",
+        password="5e3ecfe5802ff28526a7a9d946df8ed006dca620b87b37579ba5ccbc792a2bf5",
+        port="5432"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(f"""
+        update users
+        set status = 'admin'
+        where telegram_id = {telegram_id} 
+        
+        """)
+    conn.commit()
+
+
 
 
 def get_savatcha_quantity(savatcha_id):
@@ -471,3 +491,9 @@ def get_achko(telegram_id):
     data = cursor.fetchone()
     print(data)
     return data
+
+
+# data = get_user()
+# print(data)
+
+# update_user_admin(881319779)

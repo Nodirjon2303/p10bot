@@ -1,1 +1,1 @@
-worker: python registration.py --log-file -
+worker: python registrationbot.py --log-file -

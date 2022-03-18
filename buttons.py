@@ -39,7 +39,7 @@ def button_admin_main():
             res = []
     if len(res)>0:
         button.append(res)
-    return ReplyKeyboardMarkup(button)
+    return ReplyKeyboardMarkup(button, resize_keyboard=True)
 
 
 

@@ -44,8 +44,9 @@ conv = ConversationHandler(
             MessageHandler(Filters.photo, command_admin_image)
         ],
         'state_admin_reklama':[
-            MessageHandler(Filters.photo, command_admin_reklama_photo),
-            MessageHandler(Filters.text, command_admin_reklama_text)
+            # MessageHandler(Filters.photo, command_admin_reklama_photo),
+            # MessageHandler(Filters.text, command_admin_reklama_text)
+            MessageHandler(Filters.all, command_forward_message)
         ]
     },
     fallbacks=[

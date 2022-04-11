@@ -312,6 +312,18 @@ def command_admin_reklama_text(update:Update, context:CallbackContext):
 
 
 
+def command_forward_message(update:Updater, context:CallbackContext):
+    users = get_users()
+    sanoq = 0
+    for i in users:
+        try:
+            context.bot.forward_message(chat_id=i[0],from_chat_id=update.effective_user.id,message_id = update.message.message_id)
+            sanoq += 1
+        except Exception as e:
+            print(e)
+            print(i[0], i[1])
+    update.message.reply_text(f"Reklama {sanoq}-ta odamga yuborildi")
+
 def command_admin_product(update: Update, context: CallbackContext):
     product_name = update.message.text
     context.user_data['product_name'] = product_name

@@ -283,7 +283,7 @@ def command_admin_reklama(update:Update, context):
 def command_admin_reklama_photo(update:Update, context:CallbackContext):
     file_id = update.message.photo[-1].file_id
     context.bot.getFile(file_id).download(f"images/reklama.jpg")
-    caption = update.message.photo.caption
+    caption = update.message.caption
     users = get_users()
     sanoq = 0
     for i in users:

@@ -281,7 +281,19 @@ def command_admin_reklama(update:Update, context):
     return 'state_admin_reklama'
 
 def command_admin_reklama_photo(update:Update, context:CallbackContext):
-    pass
+    file_id = update.message.photo[-1].file_id
+    context.bot.getFile(file_id).download(f"images/reklama.jpg")
+    caption = update.message.photo.caption
+    users = get_users()
+    sanoq = 0
+    for i in users:
+        try:
+            context.bot.send_photo(chat_id=i[0],photo=open('images/reklama.jpg'), caption=caption)
+            sanoq += 1
+        except Exception as e:
+            print(e)
+            print(i[0], i[1])
+    update.message.reply_text(f"Reklama {sanoq}-ta odamga yuborildi")
 
 
 def command_admin_reklama_text(update:Update, context:CallbackContext):

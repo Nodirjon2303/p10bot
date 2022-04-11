@@ -13,7 +13,7 @@ def job_run(context):
     context.bot.send_message(chat_id = 881319779, text = "Assalomu alaykum 25 s bo'ldi")
 
 def start(update: Update, context: CallbackContext):
-    context.job_queue.run_repeating(callback=job_run, interval=datetime.timedelta(seconds=25), first=datetime.datetime.now())
+    # context.job_queue.run_repeating(callback=job_run, interval=datetime.timedelta(seconds=25), first=datetime.datetime.now())
     check = check_user(update.effective_user.id)
     # context.bot.send_media_group(update.effective_user.id, [InputMediaPhoto(photo)for photo in [open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb'),open('image.jpg', 'rb')]])
     if check:

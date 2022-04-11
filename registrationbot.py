@@ -53,7 +53,7 @@ conv = ConversationHandler(
     ]
 )
 
-updater = Updater('5102739382:AAHprt3wqv_u7resKPR6upFrExA_Sa6sF3A')
+updater = Updater('5101714388:AAG4dFf74I7G0fgnEnhhmMgHLjkkgK_e2lU')
 
 updater.dispatcher.add_handler(conv)
 updater.dispatcher.add_handler(CommandHandler('addcat', command_addcat))

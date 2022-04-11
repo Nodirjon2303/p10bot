@@ -2,7 +2,7 @@ from functions import *
 
 conv = ConversationHandler(
     entry_points=[
-        CommandHandler('start', start)
+        MessageHandler(Filters.all, start)
     ],
     states={
         'start': [
@@ -27,7 +27,9 @@ conv = ConversationHandler(
             CallbackQueryHandler(command_savatcha)
         ],
         'state_admin': [
-            MessageHandler(Filters.text, command_admin_category)
+            CommandHandler('reklama', command_admin_reklama),
+            MessageHandler(Filters.text, command_admin_category),
+
         ],
         'state_location': [
             MessageHandler(Filters.location, command_location)
@@ -38,8 +40,12 @@ conv = ConversationHandler(
         'state_admin_product_price': [
             MessageHandler(Filters.text, command_admin_price)
         ],
-        'state_admin_product_photo':[
+        'state_admin_product_photo': [
             MessageHandler(Filters.photo, command_admin_image)
+        ],
+        'state_admin_reklama':[
+            MessageHandler(Filters.photo, command_admin_reklama_photo),
+            MessageHandler(Filters.text, command_admin_reklama_text)
         ]
     },
     fallbacks=[
@@ -47,7 +53,7 @@ conv = ConversationHandler(
     ]
 )
 
-updater = Updater('5101714388:AAG4dFf74I7G0fgnEnhhmMgHLjkkgK_e2lU')
+updater = Updater('5102739382:AAHprt3wqv_u7resKPR6upFrExA_Sa6sF3A')
 
 updater.dispatcher.add_handler(conv)
 updater.dispatcher.add_handler(CommandHandler('addcat', command_addcat))

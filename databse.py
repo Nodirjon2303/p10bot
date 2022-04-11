@@ -135,7 +135,7 @@ def add_savatcha(user_id, product_id, soni, status):
     INSERT INTO savatcha (product_id, user_id, soni, status)
     VALUES (%s, %s, %s, %s)
     """, (product_id, user_id, soni, status))
-    conn.commit()
+    conn.commit ()
 
 
 def add_product(product_name, narxi, category):
@@ -469,6 +469,25 @@ def get_user(telegram_id):
     WHERE telegram_id ={telegram_id}
     """)
     data = cursor.fetchone()
+    return data
+
+
+
+def get_users():
+    conn = psycopg2.connect(
+        host="ec2-34-192-83-52.compute-1.amazonaws.com",
+        database="deqtghb1d51pfq",
+        user="pcrkryogpainva",
+        password="5e3ecfe5802ff28526a7a9d946df8ed006dca620b87b37579ba5ccbc792a2bf5",
+        port="5432"
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(f"""
+    SELECT telegram_id, full_name from users
+    """)
+    data = cursor.fetchall()
     return data
 
 

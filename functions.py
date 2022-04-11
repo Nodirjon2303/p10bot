@@ -284,11 +284,12 @@ def command_admin_reklama_photo(update:Update, context:CallbackContext):
     file_id = update.message.photo[-1].file_id
     context.bot.getFile(file_id).download(f"images/reklama.jpg")
     caption = update.message.caption
+    print(caption)
     users = get_users()
     sanoq = 0
     for i in users:
         try:
-            context.bot.send_photo(chat_id=i[0],photo=open('images/reklama.jpg'), caption=caption)
+            context.bot.send_photo(chat_id=i[0],photo=open('images/reklama.jpg', 'rb'), caption=caption)
             sanoq += 1
         except Exception as e:
             print(e)
